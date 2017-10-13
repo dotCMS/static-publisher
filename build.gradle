@@ -1,0 +1,47 @@
+plugins {
+    id 'biz.aQute.bnd.builder' version '3.3.0'
+}
+
+// Since dotCMS 3.x always use Java 8
+sourceCompatibility = '1.8'
+
+// Plugin version
+version = '0.1'
+
+// Repositories
+// reference to "artifactory" our oficial repository
+repositories {
+    maven { url "http://repo.dotcms.com/artifactory/libs-release" }
+}
+
+configurations {
+    osgiLibs
+}
+
+// Dependencies list
+dependencies {
+    // include all jars within the resource libs
+    compile fileTree(dir: 'src/main/resources/libs', include: '*.jar')
+    // Using all jar from artifactory part of the dotcms group
+    compile('com.dotcms:dotcms:4.2.0') { transitive = true }
+    compile group: 'com.hierynomus', name: 'sshj', version:'0.21.1'
+}
+
+// gradle task creates the manifest for the OSGi bundle
+// replace <plugin_package> and <plugin_description>
+jar {
+    manifest {
+        attributes (
+                'Bundle-Vendor': 'dotCMS',
+                'Bundle-Description': '<plugin_description>',
+                'Bundle-DocURL': 'https://dotcms.com/',
+                'Bundle-Activator': '<plugin_package>.Activator',
+                'DynamicImport-Package': '*',
+                'Import-Package': '*;version=0'
+        )
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.2'
+}
