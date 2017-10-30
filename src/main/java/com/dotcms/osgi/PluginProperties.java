@@ -32,6 +32,7 @@ public class PluginProperties {
     public static String[] getPropertyArray(String key) {
         return properties.getProperty(key).split(",");
     }
+
     public static String getProperty(String key, String defaultValue) {
         String x = properties.getProperty(key);
         return (x == null) ? defaultValue : x;
